@@ -1,13 +1,16 @@
 {- Problem 1: Find the last element of a list -}
 myLast :: [a] -> a
+myLast [] = error "Can't find last element of empty list"
 myLast (x:xs)
         | null xs = x
         | otherwise = myLast xs
 
 {- Problem 2: Find the second to last element of a list -}
 myButLast :: [a] -> a
+myButLast [] = error "Can't find second to last element of empty list"
 myButLast (x:xs)
-        | length xs == 1 = x
+        | length xs == 1 = error "Can't find second to last element of one list"
+        | length xs == 2 = x
         | otherwise = myButLast xs
 
 {- Problem 3: Find the kth element of a list -}
@@ -29,7 +32,7 @@ myReverse (x:xs)
       | otherwise = myReverse xs ++ [x]
 
 {- Problem 6: Return if a list is a palindrome or not-}
-isPalindrome :: (Eq a)=>[a] -> Bool
+isPalindrome :: (Eq a) => [a] -> Bool
 isPalindrome [] = True
 isPalindrome (x:xs)
           | null xs = True
