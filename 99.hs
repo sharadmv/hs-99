@@ -20,7 +20,7 @@ elementAt xs k = head . drop k $ xs
 {- Problem 4: Find the number of elements in a list -}
 myLength :: [a] -> Int
 myLength [] = 0
-myLength (x:xs)
+myLength (_:xs)
       | null xs = 1
       | otherwise = 1 + myLength xs
 
