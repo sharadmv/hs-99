@@ -1,5 +1,3 @@
-main = putStrLn "Hello World!"
-
 {- Problem 1: Find the last element of a list -}
 myLast :: [a] -> a
 myLast [] = error "Can't find last element of empty list"
@@ -58,3 +56,31 @@ pack xs = let (h, t) = (span (==(head xs)) xs) in [h] ++ pack t
 {- Problem 10:  Run-length encoding of a list -}
 encode :: (Eq a) => [a] -> [(Int, a)]
 encode = map (\x -> (length x, head x)) . pack
+
+
+
+{- Main method. Running examples -}
+main :: IO()
+main = do
+          putStrLn "Running examples..."
+          putStrLn . show $ myLast [1,2,3,4] -- 4
+          putStrLn . show $ myLast ['x','y','z'] -- 'z'
+          putStrLn . show $ myButLast [1,2,3,4] -- 3
+          putStrLn . show $ myButLast ['a'..'z'] -- 'y'
+          putStrLn . show $ elementAt [1,2,3] 2
+          putStrLn . show $ elementAt "haskell" 5
+          putStrLn . show $ myLength [123, 456, 789]
+          putStrLn . show $ myLength "Hello, world!"
+          putStrLn . show $ myReverse "A man, a plan, a canal, panama!"
+          putStrLn . show $ myReverse [1,2,3,4]
+          putStrLn . show $ myLength [123, 456, 789]
+          putStrLn . show $ isPalindrome [1,2,3]
+          putStrLn . show $ isPalindrome "madamimadam"
+          putStrLn . show $ isPalindrome [1,2,4,8,16,8,4,2,1]
+          putStrLn . show $ flatten (Elem 5)
+          putStrLn . show $ flatten (List [Elem 1, List [Elem 2, List [Elem 3, Elem 4], Elem 5]])
+          putStrLn . show $ (flatten (List []) :: [Int])
+          putStrLn . show $ compress "aaaabccaadeeee"
+          putStrLn . show $  ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
+          putStrLn . show $  encode "aaaabccaadeeee"
+
