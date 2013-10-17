@@ -1,3 +1,5 @@
+main = putStrLn "Hello World!"
+
 {- Problem 1: Find the last element of a list -}
 myLast :: [a] -> a
 myLast [] = error "Can't find last element of empty list"
@@ -15,7 +17,7 @@ myButLast (x:xs)
 
 {- Problem 3: Find the kth element of a list -}
 elementAt :: ([a] -> Int -> a)
-elementAt xs k = head . drop k $ xs
+elementAt xs k = head . drop (k - 1) $ xs
 
 {- Problem 4: Find the number of elements in a list -}
 myLength :: [a] -> Int
@@ -37,3 +39,22 @@ isPalindrome [] = True
 isPalindrome (x:xs)
           | null xs = True
           | otherwise = (x == last xs) && (isPalindrome $ init xs)
+
+{- Problem 7: Flatten a nested list structure -}
+data NestedList a = Elem a | List [NestedList a] deriving Show
+flatten :: NestedList a -> [a]
+flatten (Elem a) = [a]
+flatten (List a) = foldr (\x y -> flatten x++y) [] a
+
+{- Problem 8: Remove consecutive duplicates of list elements -}
+compress :: (Eq a) => [a] -> [a]
+compress = foldl (\x y -> if null x then [y] else if last x == y then x else x++[y]) []
+
+{- Problem 9: Pack consecutive duplicates of list elements into sublists -}
+pack :: (Eq a) => [a] -> [[a]]
+pack [] = []
+pack xs = let (h, t) = (span (==(head xs)) xs) in [h] ++ pack t 
+
+{- Problem 10:  Run-length encoding of a list -}
+encode :: (Eq a) => [a] -> [(Int, a)]
+encode = map (\x -> (length x, head x)) . pack
