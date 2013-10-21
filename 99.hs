@@ -57,6 +57,58 @@ pack xs = let (h, t) = (span (==(head xs)) xs) in [h] ++ pack t
 encode :: (Eq a) => [a] -> [(Int, a)]
 encode = map (\x -> (length x, head x)) . pack
 
+{- Problem 11:  Modified run-length encoding of a list that keep duplicates as is -}
+data RLE a = Multiple Int a | Single a deriving (Eq, Show)
+encodeModified :: (Eq a) => [a] -> [RLE a]
+encodeModified = map (\x -> if (fst x) == 1 then Single $ snd x else Multiple (fst x) (snd x)) . encode
+
+{- Problem 12:  Decode a modified run length encoding -}
+decodeModified :: (Eq a) => [RLE a] -> [a]
+decodeModified = foldl unwind []
+                  where unwind x (Multiple y a) = x++(replicate y a)
+                        unwind x (Single y) = x++[y]
+
+{- Problem 13:  Create an RLE directly -}
+encodeDirect :: (Eq a) => [a] -> [RLE a]
+encodeDirect = foldr wind []
+                where wind y [] = [Single y]
+                      wind y ((Multiple a x):xs) = if x == y then (Multiple (a+1) x):xs else ((Single y):(Multiple a x):xs)
+                      wind y ((Single x):xs) = if x == y then (Multiple (2) x):xs else ((Single y):(Single x):xs)
+
+{- Problem 14:  Duplicate the elements of a list -}
+dupli :: [a] -> [a]
+dupli = foldr (\y xs -> y:y:xs) []
+
+{- Problem 15:  Replicate the elements of a list a number of times -}
+repli :: [a] -> Int -> [a]
+repli xs n = foldr (\y x -> (replicate n y)++x) [] xs
+
+{- Problem 16:  Drop every nth element of a list -}
+dropEvery :: [a] -> Int -> [a]
+dropEvery [] _ = []
+dropEvery xs n = take (n - 1) xs ++ dropEvery (drop n xs) n
+
+{- Problem 17:  Split a list at a position-}
+split :: [a] -> Int -> ([a], [a])
+split xs = (\n -> (take n xs, drop n xs))
+
+{- Problem 18:  Slice a list -}
+slice :: [a] -> Int -> Int -> [a]
+slice xs a b = (drop (a - 1) . take b) xs
+
+{- Problem 19:  Rotate a list to the left -}
+rotate :: [a] -> Int -> [a]
+rotate xs 0 = xs
+rotate xs n
+        | n > 0 = rotate ((tail xs) ++ [head xs]) (n - 1)
+        | n < 0 = rotate ([last xs] ++ init xs) (n + 1)
+
+{- Problem 20:  Remove the kth element from a list -}
+removeAt :: Int -> [a] -> (a, [a])
+removeAt _ [] = error("this doesn't work sorry")
+removeAt 1 (x:xs) = (x, xs)
+removeAt n (x:xs) = (a, x:b)
+                     where (a, b) = removeAt (n-1) xs
 
 
 {- Main method. Running examples -}
@@ -83,4 +135,15 @@ main = do
           putStrLn . show $ compress "aaaabccaadeeee"
           putStrLn . show $  ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
           putStrLn . show $  encode "aaaabccaadeeee"
+          putStrLn . show $  encodeModified "aaaabccaadeeee"
+          putStrLn . show $  decodeModified [Multiple 4 'a',Single 'b',Multiple 2 'c', Multiple 2 'a',Single 'd',Multiple 4 'e']
+          putStrLn . show $  encodeDirect "aaaabccaadeeee"
+          putStrLn . show $  dupli [1, 2, 3]
+          putStrLn . show $  repli "abc" 3
+          putStrLn . show $  dropEvery "abcdefghik" 3
+          putStrLn . show $  split "abcdefghik" 3
+          putStrLn . show $  slice ['a','b','c','d','e','f','g','h','i','k'] 3 7
+          putStrLn . show $  rotate ['a','b','c','d','e','f','g','h'] 3
+          putStrLn . show $  rotate ['a','b','c','d','e','f','g','h'] (-2)
+          putStrLn . show $  removeAt 2 "abcd"
 
